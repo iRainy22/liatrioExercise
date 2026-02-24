@@ -1,0 +1,26 @@
+# general files
+
+.dockerignore
+.editorconfig
+.gitignore
+.gitattributes
+env.example
+.env.test
+Dockerfile
+dev.Dockerfile
+docker-compose.yml
+LICENSE
+
+
+**/*.md
+**/*_test.go
+*.out
+
+
+
+# folders
+.idea/
+.git/
+.github/
+build/
+vendor/
