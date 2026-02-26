@@ -8,17 +8,19 @@ RUN go mod download
 
 #copies over the server and builds the binary
 COPY api/ ./
-RUN go build -o /bin/server ./
 
+# Builds binary for scratch
+RUN GOOS=linux GOARCH=amd64 CGO_ENABLED=0 go build -trimpath -o server . 
 
-#--- Deployment ---
-FROM alpine:latest
+#--- Run-time Stage ---
+FROM scratch 
+
 
 #copies the binary from the builder
-COPY --from=builder /bin/server /bin/server
+COPY --from=builder /app/server /server
 
 #opens port 80
 EXPOSE 80
 
 #starts the server
-CMD ["./bin/server"]
+ENTRYPOINT ["/server"]
