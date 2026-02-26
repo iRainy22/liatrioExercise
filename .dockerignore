@@ -1,5 +1,4 @@
-# general files
-
+#general files
 .dockerignore
 .editorconfig
 .gitignore
@@ -11,10 +10,10 @@ dev.Dockerfile
 docker-compose.yml
 LICENSE
 
-
 **/*.md
 **/*_test.go
 *.out
+**/.DS_Store
 
 
 
