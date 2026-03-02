@@ -22,5 +22,8 @@ COPY --from=builder /app/server /server
 #opens port 80
 EXPOSE 80
 
+#Switch to non-root user
+USER 65532:65532
+
 #starts the server
 ENTRYPOINT ["/server"]
