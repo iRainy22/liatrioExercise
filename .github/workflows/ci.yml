@@ -22,6 +22,9 @@ jobs:
           sleep 5
           docker ps --filter "name=api"
 
+      - name: Test Apprentice Action
+        uses: liatrio/github-actions/apprentice-action@master
+
       - name: Stop container
         if: always()
         run: docker stop api || true
