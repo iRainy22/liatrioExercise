@@ -10,7 +10,7 @@ RUN go mod download
 COPY api/ ./
 
 # Builds binary for scratch
-RUN GOOS=linux GOARCH=amd64 CGO_ENABLED=0 go build -trimpath -o server . 
+RUN GOOS=$TARGETOS GOARCH=$TARGETARCH CGO_ENABLED=0 go build -trimpath -o server . 
 
 #--- Run-time Stage ---
 FROM scratch 
