@@ -1,0 +1,56 @@
+name: ci
+
+#Run this workflow when a PR or a push to main occurs 
+on:
+  push:
+    branches: 
+      - "main"
+  pull_request:
+
+
+jobs:
+  docker-build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Copy Files
+        uses: actions/checkout@v4
+
+        # Build Dev image
+      - name: Build dev image
+        run: docker build -t api .
+        
+        # Run Dev image
+      - name: Run container
+        run: |
+          docker run -d --rm --name api -p 80:8080 -e PORT=8080 api
+          curl --retry 3 --retry-delay 10 -fs http://localhost:80/
+
+      - name: Test Apprentice Action
+        uses: liatrio/github-actions/apprentice-action@v1.0.0
+        
+      - name: Stop container
+        if: always()
+        run: docker stop api || true
+
+      - name: Connect to Docker Hub
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        uses: docker/login-action@v3
+        with: 
+          username: ${{ secrets.DOCKERUSER }}
+          password: ${{ secrets.DOCKERHUBTOKEN }}
+
+      - name: Set up Docker Buildx for next step
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build and push production image
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        uses: docker/build-push-action@v6
+        with:
+          context:  .
+          file: Dockerfile
+          push: true
+          platforms: linux/amd64,linux/arm64
+          tags: |
+            ${{ secrets.DOCKERUSER }}/${{ secrets.DOCKERHUBPROJECT }}:latest
+            ${{ secrets.DOCKERUSER }}/${{ secrets.DOCKERHUBPROJECT }}:${{ github.sha }}
