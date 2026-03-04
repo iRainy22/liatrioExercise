@@ -52,5 +52,5 @@ jobs:
           push: true
           platforms: linux/amd64,linux/arm64
           tags: |
-            ${{ secrets.DOCKERUSER }}/${{ secrets.DOCKERHUBPROJECT }}:latest
-            ${{ secrets.DOCKERUSER }}/${{ secrets.DOCKERHUBPROJECT }}:${{ github.sha }}
+            ${{ secrets.DOCKERUSER }}/${{ secrets.DOCKERHUBPROJECTNAME }}:latest
+            ${{ secrets.DOCKERUSER }}/${{ secrets.DOCKERHUBPROJECTNAME }}:${{ github.sha }}
