@@ -9,6 +9,10 @@ RUN go mod download
 #copies over the server and builds the binary
 COPY api/ ./
 
+#Declare buildx variables
+arg TARGETOS
+arg TARGETARCH
+
 # Builds binary for scratch
 RUN GOOS=$TARGETOS GOARCH=$TARGETARCH CGO_ENABLED=0 go build -trimpath -o server . 
 
