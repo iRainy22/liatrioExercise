@@ -2,7 +2,9 @@ package main
 
 import (
     "log"
+	"os"
     "time"
+
     "github.com/gofiber/fiber/v3"
 )
 
@@ -18,9 +20,15 @@ func main() {
     app.Get("/", func (c fiber.Ctx) error {
         return c.JSON(Response{
 			Message:   "My name is Rainier Ring",
-			Timestamp: time.Now().Unix(),
+			Timestamp: time.Now().UnixMilli(),
 		})
     })
-
-    log.Fatal(app.Listen(":80"))
+	
+	port:= os.Getenv("PORT")
+	if port == "" {
+		port = "8080"
+	}
+	
+	log.Printf("listening on :%s", port)
+	log.Fatal(app.Listen(":" + port))
 }
