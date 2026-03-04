@@ -1,10 +1,12 @@
 name: ci
 
+#Run this workflow when a PR or a push to main occurs 
 on:
   push:
     branches: 
       - "main"
   pull_request:
+
 
 jobs:
   docker-build:
@@ -18,9 +20,10 @@ jobs:
 
       - name: Run container
         run: |
-          docker run -d --rm --name api -p 80:80 api
-          sleep 5
-          docker ps --filter "name=api"
+          docker run -d --rm --name api -p 80:8080 -e PORT=8080 api
+
+      - name: Test Container
+        run:  curl --retry 3 --retry-delay 5 -fs http://localhost:80/
 
       - name: Test Apprentice Action
         uses: liatrio/github-actions/apprentice-action@master
