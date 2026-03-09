@@ -1,0 +1,30 @@
+name: Deploy to GCE
+
+#Run after previous Workflow is completed
+on:
+  workflow_run:
+    workflows: ["Build and Push to DockerHub"]
+    types: [completed]
+
+
+jobs:
+  deploy:
+    #Only continue if previous workflow was a success and we push/ pull request targets main branch
+    if: ${{ github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.head_branch == 'main' }}
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Authenticate to GCP
+        id: auth
+        uses: google-github-actions/auth@v2
+        with:
+          credentials_json: ${{ secrets.GCP_SA_KEY }}
+
+      - name: Set up Cloud SDK
+        uses: google-github-actions/setup-gcloud@v2
+
+      - name: Deploy to GCE
+        run: |
+          gcloud compute instances update-container ${{ secrets.GCP_INSTANCE_NAME }} \
+            --zone=us-west1-b \
+            --container-image=docker.io/${{ secrets.DOCKERUSER }}/${{ secrets.DOCKERHUBPROJECTNAME }}:${{ github.event.workflow_run.head_sha }}

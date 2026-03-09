@@ -1,4 +1,4 @@
-name: ci
+name: Build and Push to DockerHub
 
 #Run this workflow when a PR or a push to main occurs 
 on:
