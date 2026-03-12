@@ -23,7 +23,7 @@ func main() {
 	//tells the app to display the JSON message at the address /
 	app.Get("/", func (c fiber.Ctx) error {
         return c.JSON(Response{
-			Message:   "My name is Rainier Ring",
+			Message:   "My name is Billy Bob Sr.",
 			Timestamp: time.Now().UnixMilli(),
 		})
     })
