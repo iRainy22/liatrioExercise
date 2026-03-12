@@ -1,13 +1,14 @@
 package main
 
+//imports needed libraries
 import (
     "log"
 	"os"
     "time"
-
     "github.com/gofiber/fiber/v3"
 )
 
+//Uses a struct to improve memory efficiency
 type Response struct {
   Message   string `json:"message"`
   Timestamp int64  `json:"timestamp"`
@@ -15,20 +16,26 @@ type Response struct {
 
 
 func main() {
+
+	//Creates a new fiber instance named app
     app := fiber.New()
 
-    app.Get("/", func (c fiber.Ctx) error {
+	//tells the app to display the JSON message at the address /
+	app.Get("/", func (c fiber.Ctx) error {
         return c.JSON(Response{
-			Message:   "My name is Jimmy Billy Bob",
+			Message:   "My name is Rainier Ring",
 			Timestamp: time.Now().UnixMilli(),
 		})
     })
 	
+	//reads an ENV variable which is saved in a file on our computer
+	//if it finds one, it uses that port, otherwise it uses 8080
+	//which our docker also uses
 	port:= os.Getenv("PORT")
 	if port == "" {
 		port = "8080"
 	}
 	
-	log.Printf("listening on :%s", port)
+	//Runs the app on the designated port
 	log.Fatal(app.Listen(":" + port))
 }
